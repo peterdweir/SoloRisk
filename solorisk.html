@@ -1,2 +1,379 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Solo Flight Risk Assessment</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<style>
+		.bodypanel {
+			border-style: solid;
+			margin-bottom: 5px;
+			max-height: 200px;
+			padding: 0px 16px;
+			overflow: hidden;
+			transition: max-height 0.2s ease-out;
+		}
+		</style>
 
+		<script>
+			function processinput(panelID) {
+				document.getElementById(panelID+"Complete").innerHTML = "&#9989";
+				togglePanel(panelID);
+				calcrisk();
+			}
+
+			function togglePanel(panelID) {
+				const panel = document.getElementById(panelID+"Body");
+				if (panel.style.maxHeight != "0px") {
+					panel.style.maxHeight = "0px";
+					document.getElementById(panelID+"ExpBtn").classList.remove("fa-caret-up");
+					document.getElementById(panelID+"ExpBtn").classList.add("fa-caret-down");
+				} else {
+					panel.style.maxHeight = panel.scrollHeight + 4 + "px"; // add padding to scrollHeight
+					document.getElementById(panelID+"ExpBtn").classList.remove("fa-caret-down");
+					document.getElementById(panelID+"ExpBtn").classList.add("fa-caret-up");
+				} 
+			}
+
+			function calcrisk() {
+				const box = document.getElementById('outerbox');
+				const choices = box.getElementsByClassName('userinput');
+				var total = 0;
+
+				for (let choice of choices) {
+					if (choice.checked) {
+						total += 1 * choice.value;
+					}
+				}
+				document.getElementById("Result").innerHTML = total;
+				if (total < 45) {
+					document.getElementById("RiskOutput").innerHTML = "Low Risk";
+					document.getElementById("RiskOutput").classList.remove("w3-yellow");
+					document.getElementById("RiskOutput").classList.remove("w3-red");
+					document.getElementById("RiskOutput").classList.add("w3-black");
+				} else if (total < 90) {
+					document.getElementById("RiskOutput").innerHTML = "High Risk";
+					document.getElementById("RiskOutput").classList.remove("w3-black");
+					document.getElementById("RiskOutput").classList.remove("w3-red");
+					document.getElementById("RiskOutput").classList.add("w3-yellow");
+				} else {
+					document.getElementById("RiskOutput").innerHTML = " NO GO ";
+					document.getElementById("RiskOutput").classList.remove("w3-black");
+					document.getElementById("RiskOutput").classList.remove("w3-yellow");
+					document.getElementById("RiskOutput").classList.add("w3-red");
+				}
+
+			}
+
+			function reset() {
+				const box = document.getElementById('outerbox');
+				const choices = box.getElementsByClassName('userinput');
+				for (let choice of choices) {
+					 choice.checked = false;
+				}
+				const panels = box.getElementsByClassName('bodypanel');
+				for (let panel of panels) {
+					panel.style.maxHeight = panel.scrollHeight + 4 + "px"; // add padding to scrollHeight
+				}
+				const toggles = box.getElementsByTagName('i');
+				for (let toggle of toggles) {
+					toggle.classList.remove("fa-caret-down");
+					toggle.classList.add("fa-caret-up");
+				}
+				const checks = box.getElementsByClassName('checkmark');
+				for (let check of checks) {
+					check.innerHTML = "";
+				}
+
+				calcrisk();
+			}
+		</script>
+	</head>
+	<body style="background-color:gray;"> 
+
+		<div class="w3-container w3-sand" style="max-width:400px; margin:auto;" id="outerbox">
+
+		<div class="w3-container w3-center">
+			<h3>Solo Flight Risk Assessment</h3>
+		</div>
+		<div class="w3-container w3-blue" id="IllTitle">
+			Illness:&nbsp &nbsp<span class="checkmark" id="IllComplete"></span>
+			<button class="w3-right w3-blue w3-border-0" onclick="togglePanel('Ill')">
+				<i id="IllExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-blue" id="IllBody">
+			<input class="w3-radio userinput" type="radio" name="Illness" id="IllSvr" value="100" onclick="processinput('Ill')">
+			<label for="IllSvr">Sick</label><br />
+			<input class="w3-radio userinput" type="radio" name="Illness" id="IllWell" value="0" onclick="processinput('Ill')">
+			<label for="IllWell">Well</label><br />
+			<input class="w3-radio userinput" type="radio" name="Illness" id="IllSlight" value="5" onclick="processinput('Ill')">
+			<label for="IllSlight">Slight Symptoms</label><br />
+			<input class="w3-radio userinput" type="radio" name="Illness" id="IllMod" value="10" onclick="processinput('Ill')">
+			<label for="IllMod">Moderate Symptoms/Recently Recovered</label><br />
+		</div>
+
+		<div class="w3-container w3-blue" id="MedTitle">
+			Medication:&nbsp &nbsp<span class="checkmark" id="MedComplete"></span>
+			<button class="w3-right w3-blue w3-border-0" onclick="togglePanel('Med')">
+				<i id="MedExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-blue" id="MedBody">
+			<input class="w3-radio userinput" type="radio" name="Medication" id="MedCurr" value="100" onclick="processinput('Med')">
+			<label for="MedCurr">Medicated</label><br />
+			<input class="w3-radio userinput" type="radio" name="Medication" id="MedNone" value="0" onclick="processinput('Med')">
+			<label for="MedNone">None</label><br />
+			<input class="w3-radio userinput" type="radio" name="Medication" id="Med36" value="5" onclick="processinput('Med')">
+			<label for="Med36">Within last 24-36 hrs</label><br />
+			<input class="w3-radio userinput" type="radio" name="Medication" id="Med24" value="10" onclick="processinput('Med')">
+			<label for="Med24">Within last 24 hrs</label><br />
+		</div>
+		
+		<div class="w3-container w3-blue" id="StressTitle">
+			Stress:&nbsp &nbsp<span class="checkmark" id="StressComplete"></span>
+			<button class="w3-right w3-blue w3-border-0" onclick="togglePanel('Stress')">
+				<i id="StressExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-blue" id="StressBody">
+			<input class="w3-radio userinput" type="radio" name="Stress" id="StrChronic" value="100" onclick="processinput('Stress')">
+			<label for="StressBody">Chronic</label><br />
+			<input class="w3-radio userinput" type="radio" name="Stress" id="StrMin" value="0" onclick="processinput('Stress')">
+			<label for="StrMin">Minimal</label><br />
+			<input class="w3-radio userinput" type="radio" name="Stress" id="StrMod" value="5" onclick="processinput('Stress')">
+			<label for="StrMed">Moderate</label><br />
+			<input class="w3-radio userinput" type="radio" name="Stress" id="StrSvr" value="10" onclick="processinput('Stress')">
+			<label for="StrSvr">Severe</label><br />
+		</div>
+		<div class="w3-container w3-blue" id="AlcoholTitle">
+			Alcohol:&nbsp &nbsp<span class="checkmark" id="AlcoholComplete"></span>
+			<button class="w3-right w3-blue w3-border-0" onclick="togglePanel('Alcohol')">
+				<i id="AlcoholExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-blue" id="AlcoholBody">
+			<input class="w3-radio userinput" type="radio" name="Alcohol" id="Alc8" value="100" onclick="processinput('Alcohol')">
+			<label for="Alc8">Within 8 hrs</label><br />
+			<input class="w3-radio userinput" type="radio" name="Alcohol" id="Alc10" value="5" onclick="processinput('Alcohol')">
+			<label for="Alc10">Between 10-12 hrs</label><br />
+			<input class="w3-radio userinput" type="radio" name="Alcohol" id="Alc12" value="10" onclick="processinput('Alcohol')">
+			<label for="Alc12">More than 12 hrs ago</label><br />
+			<input class="w3-radio userinput" type="radio" name="Alcohol" id="Alc16" value="0" onclick="processinput('Alcohol')">
+			<label for="Alc16">More than 16 hrs ago</label><br />
+		</div>
+
+		<div class="w3-container w3-blue" id="SleepTitle">
+			Sleep/Fatigue:&nbsp &nbsp<span class="checkmark" id="SleepComplete"></span>
+			<button class="w3-right w3-blue w3-border-0" onclick="togglePanel('Sleep')">
+				<i id="SleepExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-blue" id="SleepBody">
+			<input class="w3-radio userinput" type="radio" name="Fatigue" id="Sleep5" value="100" onclick="processinput('Sleep')">
+			<label for="Sleep5">Sleep under 5 hours</label><br />
+			<input class="w3-radio userinput" type="radio" name="Fatigue" id="Sleep6" value="10" onclick="processinput('Sleep')">
+			<label for="Sleep6">Sleep 5-6 hrs</label><br />
+			<input class="w3-radio userinput" type="radio" name="Fatigue" id="Sleep7" value="5" onclick="processinput('Sleep')">
+			<label for="Sleep7">Sleep 6-7 hrs</label><br />
+			<input class="w3-radio userinput" type="radio" name="Fatigue" id="Sleep8" value="0" onclick="processinput('Sleep')">
+			<label for="Sleep8">Sleep more than 7 hrs</label><br />
+		</div>
+
+		<div class="w3-container w3-blue" id="EatTitle">
+			Food:&nbsp &nbsp<span class="checkmark" id="EatComplete"></span>
+			<button class="w3-right w3-blue w3-border-0" onclick="togglePanel('Eat')">
+				<i id="EatExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-blue" id="EatBody">
+			<input class="w3-radio userinput" type="radio" name="Eating" id="Eat3" value="0" onclick="processinput('Eat')">
+			<label for="Eat3">Last meal within 4 hrs</label><br />
+			<input class="w3-radio userinput" type="radio" name="Eating" id="Eat5" value="5" onclick="processinput('Eat')">
+			<label for="Eat5">Last meal 4-6 hrs ago</label><br />
+			<input class="w3-radio userinput" type="radio" name="Eating" id="Eat7" value="10" onclick="processinput('Eat')">
+			<label for="Eat7">Last meal 6-8 hrs ago</label><br />
+			<input class="w3-radio userinput" type="radio" name="Eating" id="Eat9" value="100" onclick="processinput('Eat')">
+			<label for="Eat9">Last meal more than 8 hrs</label><br />
+		</div>
+
+		<div class="w3-container w3-blue" id="WellnessTitle">
+			Wellness:&nbsp &nbsp<span class="checkmark" id="WellnessComplete"></span>
+			<button class="w3-right w3-blue w3-border-0" onclick="togglePanel('Wellness')">
+				<i id="WellnessExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-blue" id="WellnessBody">
+			How is your day going?<br />
+			<input class="w3-radio userinput" type="radio" name="Wellness" id="WellGood" value="0" onclick="processinput('Wellness')">
+			<label for="WellGood">Great</label><br />
+			<input class="w3-radio userinput" type="radio" name="Wellness" id="WellOK" value="5" onclick="processinput('Wellness')">
+			<label for="WellOK">OK. Minor stressors</label><br />
+			<input class="w3-radio userinput" type="radio" name="Wellness" id="WellPoor" value="10" onclick="processinput('Wellness')">
+			<label for="WellPoor">One thing after another</label><br />
+		</div>
+
+		<div class="w3-container w3-blue" id="TimeTitle">
+			Time in Type:&nbsp &nbsp<span class="checkmark" id="TimeComplete"></span>
+			<button class="w3-right w3-blue w3-border-0" onclick="togglePanel('Time')">
+				<i id="TimeExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-blue" id="TimeBody">
+			<input class="w3-radio userinput" type="radio" name="TimeType" id="TimeHi" value="0" onclick="processinput('Time')">
+			<label for="TimeHi">More than 50 hrs PIC</label><br />
+			<input class="w3-radio userinput" type="radio" name="TimeType" id="TimeMed" value="5" onclick="processinput('Time')">
+			<label for="TimeMed">200-999 hrs PIC</label><br />
+			<input class="w3-radio userinput" type="radio" name="TimeType" id="TimeLow" value="10" onclick="processinput('Time')">
+			<label for="TimeLow">Less than 200 hrs PIC</label><br />
+		</div>
+
+		<div class="w3-container w3-blue" id="RecentTitle">
+			Recent Flight Hours:&nbsp &nbsp<span class="checkmark" id="RecentComplete"></span>
+			<button class="w3-right w3-blue w3-border-0" onclick="togglePanel('Recent')">
+				<i id="RecentExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-blue" id="RecentBody">
+			<input class="w3-radio userinput" type="radio" name="Recent" id="RecentHi" value="0" onclick="processinput('Recent')">
+			<label for="RecentHi">Flown within 10 days</label><br />
+			<input class="w3-radio userinput" type="radio" name="Recent" id="RecentMed" value="5" onclick="processinput('Recent')">
+			<label for="RecentMed">Last flight 11-30 days ago</label><br />
+			<input class="w3-radio userinput" type="radio" name="Recent" id="RecentLow" value="10" onclick="processinput('Recent')">
+			<label for="RecentLow">Last flight 31-60 days ago</label><br />
+		</div>
+
+		<div class="w3-container w3-purple" id="CrewTitle">
+			A/C Occupants:&nbsp &nbsp<span class="checkmark" id="CrewComplete"></span>
+			<button class="w3-right w3-purple w3-border-0" onclick="togglePanel('Crew')">
+				<i id="CrewExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-purple" id="CrewBody">
+			<input class="w3-radio userinput" type="radio" name="Crew" id="CrewDual" value="0" onclick="processinput('Crew')">
+			<label for="CrewDual">Dual with CFI</label><br />
+			<input class="w3-radio userinput" type="radio" name="Crew" id="CrewSolo" value="5" onclick="processinput('Crew')">
+			<label for="CrewSolo">Solo</label><br />
+			<input class="w3-radio userinput" type="radio" name="Crew" id="CrewPax" value="10" onclick="processinput('Crew')">
+			<label for="CrewPax">Pilot with passengers</label><br />
+		</div>
+
+		<div class="w3-container w3-purple" id="VisTitle">
+			Enroute Visibility:&nbsp &nbsp<span class="checkmark" id="VisComplete"></span>
+			<button class="w3-right w3-purple w3-border-0" onclick="togglePanel('Vis')">
+				<i id="VisExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-purple" id="VisBody">
+			<input class="w3-radio userinput" type="radio" name="Vis" id="Vis6" value="0" onclick="processinput('Vis')">
+			<label for="Vis6">More than 5 mi</label><br />
+			<input class="w3-radio userinput" type="radio" name="Vis" id="Vis4" value="5" onclick="processinput('Vis')">
+			<label for="Vis4">3-5 miles</label><br />
+			<input class="w3-radio userinput" type="radio" name="Vis" id="Vis2" value="10" onclick="processinput('Vis')">
+			<label for="Vis2">Less than 3 mi</label><br />
+		</div>
+
+		<div class="w3-container w3-purple" id="CeilTitle">
+			Enroute Ceiling:&nbsp &nbsp<span class="checkmark" id="CeilComplete"></span>
+			<button class="w3-right w3-purple w3-border-0" onclick="togglePanel('Ceil')">
+				<i id="CeilExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-purple" id="CeilBody">
+			<input class="w3-radio userinput" type="radio" name="Ceil" id="Ceil4000" value="0" onclick="processinput('Ceil')">
+			<label for="Ceil4000">More than 3000 ft</label><br />
+			<input class="w3-radio userinput" type="radio" name="Ceil" id="Ceil2000" value="5" onclick="processinput('Ceil')">
+			<label for="Ceil2000">1000-3000 ft</label><br />
+			<input class="w3-radio userinput" type="radio" name="Ceil" id="Ceil500" value="10" onclick="processinput('Ceil')">
+			<label for="Ceil500">Less than 1000 ft</label><br />
+		</div>
+		
+		<div class="w3-container w3-purple" id="WindTitle">
+			Winds:&nbsp &nbsp<span class="checkmark" id="WindComplete"></span>
+			<button class="w3-right w3-purple w3-border-0" onclick="togglePanel('Wind')">
+				<i id="WindExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-purple" id="WindBody">
+			<input class="w3-radio userinput" type="radio" name="Wind" id="Wind5" value="0" onclick="processinput('Wind')">
+			<label for="Wind5">Less than 10 kts</label><br />
+			<input class="w3-radio userinput" type="radio" name="Wind" id="Wind15" value="5" onclick="processinput('Wind')">
+			<label for="Wind15">10-20 kts</label><br />
+			<input class="w3-radio userinput" type="radio" name="Wind" id="Wind25" value="10" onclick="processinput('Wind')">
+			<label for="Wind25">20-30 kts</label><br />
+			<input class="w3-radio userinput" type="radio" name="Wind" id="Wind35" value="0" onclick="processinput('Wind')">
+			<label for="Wind35">More than 30 kts</label><br />
+		</div>
+
+		<div class="w3-container w3-purple" id="IcingTitle">
+			Icing:&nbsp &nbsp<span class="checkmark" id="IcingComplete"></span>
+			<button class="w3-right w3-purple w3-border-0" onclick="togglePanel('Icing')">
+				<i id="IcingExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-purple" id="IcingBody">
+			Clouds with 5 deg of freezing:<br />
+			<input class="w3-radio userinput" type="radio" name="Icing" id="IcingNone" value="0" onclick="processinput('Icing')">
+			<label for="IcingNone">None</label><br />
+			<input class="w3-radio userinput" type="radio" name="Icing" id="IcingForecast" value="5" onclick="processinput('Icing')">
+			<label for="IcingForecast">Forecast</label><br />
+			<input class="w3-radio userinput" type="radio" name="Icing" id="IcingKnown" value="10" onclick="processinput('Icing')">
+			<label for="IcingKnown">Known</label><br />
+		</div>
+		
+		<div class="w3-container w3-purple" id="TerrTitle">
+			Terrain:&nbsp &nbsp<span class="checkmark" id="TerrComplete"></span>
+			<button class="w3-right w3-purple w3-border-0" onclick="togglePanel('Terr')">
+				<i id="TerrExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-purple" id="TerrBody">
+			<input class="w3-radio userinput" type="radio" name="Terr" id="TerrLow" value="0" onclick="processinput('Terr')">
+			<label for="TerrLow">Less than 2000 ft MSL</label><br />
+			<input class="w3-radio userinput" type="radio" name="Terr" id="TerrMed" value="5" onclick="processinput('Terr')">
+			<label for="TerrMed">2000-5000 ft MSL</label><br />
+			<input class="w3-radio userinput" type="radio" name="Terr" id="TerrHi" value="10" onclick="processinput('Terr')">
+			<label for="TerrHi">More than 5000 ft MSL</label><br />
+		</div>
+		
+		<div class="w3-container w3-purple" id="LightTitle">
+			Lighting:&nbsp &nbsp<span class="checkmark" id="LightComplete"></span>
+			<button class="w3-right w3-purple w3-border-0" onclick="togglePanel('Light')">
+				<i id="LightExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-purple" id="LightBody">
+			<input class="w3-radio userinput" type="radio" name="Light" id="LightDay" value="0" onclick="processinput('Light')">
+			<label for="LightDay">Day</label><br />
+			<input class="w3-radio userinput" type="radio" name="Light" id="LightDusk" value="5" onclick="processinput('Light')">
+			<label for="LightDusk">Dusk</label><br />
+			<input class="w3-radio userinput" type="radio" name="Light" id="LightNight" value="10" onclick="processinput('Light')">
+			<label for="LightNight">Night</label><br />
+		</div>
+		
+		<div class="w3-container w3-purple" id="DestTitle">
+			Destination:&nbsp &nbsp<span class="checkmark" id="DestComplete"></span>
+			<button class="w3-right w3-purple w3-border-0" onclick="togglePanel('Dest')">
+				<i id="DestExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-purple" id="DestBody">
+			<input class="w3-radio userinput" type="radio" name="Dest" id="DestFam" value="0" onclick="processinput('Dest')">
+			<label for="DestFam">More than 10 landings (familiar)</label><br />
+			<input class="w3-radio userinput" type="radio" name="Dest" id="DestAcquaint" value="5" onclick="processinput('Dest')">
+			<label for="DestAcquaint">1-9 landings (acquainted)</label><br />
+			<input class="w3-radio userinput" type="radio" name="Dest" id="DestUnfam" value="10" onclick="processinput('Dest')">
+			<label for="DestUnfam">0 landings (unfamiliar)</label><br />
+		</div>
+		
+		<div class="w3-container w3-indigo" id="InspTitle">
+			Aircraft inspection:&nbsp &nbsp<span class="checkmark" id="InspComplete"></span>
+			<button class="w3-right w3-indigo w3-border-0" onclick="togglePanel('Insp')">
+				<i id="InspExpBtn" class="w3-large fas fa-caret-up"></i></button>
+		</div>
+		<div class="w3-container bodypanel w3-border-indigo" id="InspBody">
+			Hours before next 100 hr inspection:<br />
+			<input class="w3-radio userinput" type="radio" name="Insp" id="Insp75" value="0" onclick="processinput('Insp')">
+			<label for="Insp75">50-99 hrs</label><br />
+			<input class="w3-radio userinput" type="radio" name="Insp" id="Insp30" value=5 onclick="processinput('Insp')">
+			<label for="Insp30">10-50 hrs</label><br />
+			<input class="w3-radio userinput" type="radio" name="Insp" id="Insp5" value=10 onclick="processinput('Insp')">
+			<label for="Insp5">Less than 10 hrs</label><br />
+		</div>
+		
+		<div class="w3-container w3-white w3-bar" style="position:sticky; bottom:0px; width:400px; margin:auto;">
+		<div class="w3-bar-item w3-xlarge">Score: <span id="Result"></span></div>
+		<div class="w3-bar-item w3-xlarge w3-right w3-third w3-black" id="RiskOutput">Low Risk</div>
+		</div>
+
+		<div class="w3-center"> <button class="w3-btn w3-green w3-large" onclick="reset()">Reset</button></div>
+
+		</div>
+	</body>
+</html>
 
