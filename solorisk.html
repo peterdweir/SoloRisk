@@ -11,7 +11,7 @@
 			border-style: solid;
 			margin-bottom: 5px;
 			max-height: 200px;
-			padding: 0px 16px;
+			padding: 0px 16px 8px;
 			overflow: hidden;
 			transition: max-height 0.2s ease-out;
 		}
@@ -28,10 +28,12 @@
 				const panel = document.getElementById(panelID+"Body");
 				if (panel.style.maxHeight != "0px") {
 					panel.style.maxHeight = "0px";
+					panel.style.paddingBottom = "0px";
 					document.getElementById(panelID+"ExpBtn").classList.remove("fa-caret-up");
 					document.getElementById(panelID+"ExpBtn").classList.add("fa-caret-down");
 				} else {
-					panel.style.maxHeight = panel.scrollHeight + 4 + "px"; // add padding to scrollHeight
+					panel.style.maxHeight = panel.scrollHeight + 12 + "px"; // add padding to scrollHeight
+					panel.style.paddingBottom = "8px";
 					document.getElementById(panelID+"ExpBtn").classList.remove("fa-caret-down");
 					document.getElementById(panelID+"ExpBtn").classList.add("fa-caret-up");
 				} 
@@ -52,14 +54,14 @@
 					document.getElementById("RiskOutput").innerHTML = "Low Risk";
 					document.getElementById("RiskOutput").classList.remove("w3-yellow");
 					document.getElementById("RiskOutput").classList.remove("w3-red");
-					document.getElementById("RiskOutput").classList.add("w3-black");
+					document.getElementById("RiskOutput").classList.add("w3-green");
 				} else if (total < 90) {
-					document.getElementById("RiskOutput").innerHTML = "High Risk";
+					document.getElementById("RiskOutput").innerHTML = "Mod Risk";
 					document.getElementById("RiskOutput").classList.remove("w3-black");
 					document.getElementById("RiskOutput").classList.remove("w3-red");
 					document.getElementById("RiskOutput").classList.add("w3-yellow");
 				} else {
-					document.getElementById("RiskOutput").innerHTML = " NO GO ";
+					document.getElementById("RiskOutput").innerHTML = "Hi Risk/NO GO ";
 					document.getElementById("RiskOutput").classList.remove("w3-black");
 					document.getElementById("RiskOutput").classList.remove("w3-yellow");
 					document.getElementById("RiskOutput").classList.add("w3-red");
@@ -104,14 +106,14 @@
 				<i id="IllExpBtn" class="w3-large fas fa-caret-up"></i></button>
 		</div>
 		<div class="w3-container bodypanel w3-border-blue" id="IllBody">
-			<input class="w3-radio userinput" type="radio" name="Illness" id="IllSvr" value="100" onclick="processinput('Ill')">
-			<label for="IllSvr">Sick</label><br />
 			<input class="w3-radio userinput" type="radio" name="Illness" id="IllWell" value="0" onclick="processinput('Ill')">
 			<label for="IllWell">Well</label><br />
 			<input class="w3-radio userinput" type="radio" name="Illness" id="IllSlight" value="5" onclick="processinput('Ill')">
 			<label for="IllSlight">Slight Symptoms</label><br />
 			<input class="w3-radio userinput" type="radio" name="Illness" id="IllMod" value="10" onclick="processinput('Ill')">
 			<label for="IllMod">Moderate Symptoms/Recently Recovered</label><br />
+			<input class="w3-radio userinput" type="radio" name="Illness" id="IllSvr" value="100" onclick="processinput('Ill')">
+			<label for="IllSvr">Sick</label><br />
 		</div>
 
 		<div class="w3-container w3-blue" id="MedTitle">
@@ -120,10 +122,10 @@
 				<i id="MedExpBtn" class="w3-large fas fa-caret-up"></i></button>
 		</div>
 		<div class="w3-container bodypanel w3-border-blue" id="MedBody">
-			<input class="w3-radio userinput" type="radio" name="Medication" id="MedCurr" value="100" onclick="processinput('Med')">
-			<label for="MedCurr">Medicated</label><br />
 			<input class="w3-radio userinput" type="radio" name="Medication" id="MedNone" value="0" onclick="processinput('Med')">
 			<label for="MedNone">None</label><br />
+			<input class="w3-radio userinput" type="radio" name="Medication" id="MedCurr" value="100" onclick="processinput('Med')">
+			<label for="MedCurr">Currently on medication</label><br />
 			<input class="w3-radio userinput" type="radio" name="Medication" id="Med36" value="5" onclick="processinput('Med')">
 			<label for="Med36">Within last 24-36 hrs</label><br />
 			<input class="w3-radio userinput" type="radio" name="Medication" id="Med24" value="10" onclick="processinput('Med')">
@@ -136,14 +138,14 @@
 				<i id="StressExpBtn" class="w3-large fas fa-caret-up"></i></button>
 		</div>
 		<div class="w3-container bodypanel w3-border-blue" id="StressBody">
-			<input class="w3-radio userinput" type="radio" name="Stress" id="StrChronic" value="100" onclick="processinput('Stress')">
-			<label for="StressBody">Chronic</label><br />
 			<input class="w3-radio userinput" type="radio" name="Stress" id="StrMin" value="0" onclick="processinput('Stress')">
 			<label for="StrMin">Minimal</label><br />
 			<input class="w3-radio userinput" type="radio" name="Stress" id="StrMod" value="5" onclick="processinput('Stress')">
 			<label for="StrMed">Moderate</label><br />
 			<input class="w3-radio userinput" type="radio" name="Stress" id="StrSvr" value="10" onclick="processinput('Stress')">
 			<label for="StrSvr">Severe</label><br />
+			<input class="w3-radio userinput" type="radio" name="Stress" id="StrChronic" value="100" onclick="processinput('Stress')">
+			<label for="StressBody">Chronic</label><br />
 		</div>
 		<div class="w3-container w3-blue" id="AlcoholTitle">
 			Alcohol:&nbsp &nbsp<span class="checkmark" id="AlcoholComplete"></span>
@@ -152,13 +154,13 @@
 		</div>
 		<div class="w3-container bodypanel w3-border-blue" id="AlcoholBody">
 			<input class="w3-radio userinput" type="radio" name="Alcohol" id="Alc8" value="100" onclick="processinput('Alcohol')">
-			<label for="Alc8">Within 8 hrs</label><br />
-			<input class="w3-radio userinput" type="radio" name="Alcohol" id="Alc10" value="5" onclick="processinput('Alcohol')">
+			<label for="Alc8">Within 10 hrs</label><br />
+			<input class="w3-radio userinput" type="radio" name="Alcohol" id="Alc10" value="10" onclick="processinput('Alcohol')">
 			<label for="Alc10">Between 10-12 hrs</label><br />
-			<input class="w3-radio userinput" type="radio" name="Alcohol" id="Alc12" value="10" onclick="processinput('Alcohol')">
-			<label for="Alc12">More than 12 hrs ago</label><br />
+			<input class="w3-radio userinput" type="radio" name="Alcohol" id="Alc12" value="5" onclick="processinput('Alcohol')">
+			<label for="Alc12">Between 12-14 hrs</label><br />
 			<input class="w3-radio userinput" type="radio" name="Alcohol" id="Alc16" value="0" onclick="processinput('Alcohol')">
-			<label for="Alc16">More than 16 hrs ago</label><br />
+			<label for="Alc16">More than 14 hrs ago</label><br />
 		</div>
 
 		<div class="w3-container w3-blue" id="SleepTitle">
@@ -214,12 +216,12 @@
 				<i id="TimeExpBtn" class="w3-large fas fa-caret-up"></i></button>
 		</div>
 		<div class="w3-container bodypanel w3-border-blue" id="TimeBody">
+			<input class="w3-radio userinput" type="radio" name="TimeType" id="TimeLow" value="10" onclick="processinput('Time')">
+			<label for="TimeLow">Less than 25 hrs PIC</label><br />
+			<input class="w3-radio userinput" type="radio" name="TimeType" id="TimeMed" value="5" onclick="processinput('Time')">
+			<label for="TimeMed">25-50 hrs PIC</label><br />
 			<input class="w3-radio userinput" type="radio" name="TimeType" id="TimeHi" value="0" onclick="processinput('Time')">
 			<label for="TimeHi">More than 50 hrs PIC</label><br />
-			<input class="w3-radio userinput" type="radio" name="TimeType" id="TimeMed" value="5" onclick="processinput('Time')">
-			<label for="TimeMed">200-999 hrs PIC</label><br />
-			<input class="w3-radio userinput" type="radio" name="TimeType" id="TimeLow" value="10" onclick="processinput('Time')">
-			<label for="TimeLow">Less than 200 hrs PIC</label><br />
 		</div>
 
 		<div class="w3-container w3-blue" id="RecentTitle">
@@ -369,7 +371,7 @@
 		
 		<div class="w3-container w3-white w3-bar" style="position:sticky; bottom:0px; width:400px; margin:auto;">
 			<div class="w3-bar-item w3-xlarge">Score: <span id="Result"></span></div>
-			<div class="w3-bar-item w3-xlarge w3-right w3-third w3-black" id="RiskOutput">Low Risk</div>
+			<div class="w3-bar-item w3-xlarge w3-right w3-third w3-green" id="RiskOutput">Low Risk</div>
 		</div>
 
 		<div class="w3-container w3-sand w3-center" style="width:400px; margin:auto;"> 
